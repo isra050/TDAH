@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Guía de Defensa - TDAH</title>
+  <style>
+    :root {
+      --color-background-app: #f4f7f9;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f8fafc;
+      --color-text-primary: #1e293b;
+      --color-text-secondary: #475569;
+      --color-text-tertiary: #94a3b8;
+      --color-border-tertiary: #e2e8f0;
+      --border-radius-md: 10px;
+      --border-radius-lg: 16px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --accent: #1D7C5E;
+      --accent-light: #E1F5EE;
+      --accent-dark: #0F4F3C;
+      --accent-border: #2EAE84;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-background-app);
+      color: var(--color-text-primary);
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    .container { padding: 1rem; }
+
+    .header { padding: 1rem 0; margin-bottom: 1rem; }
+    .header h1 { font-size: 22px; font-weight: 600; color: var(--color-text-primary); line-height: 1.3; }
+    .header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+
+    .tabs-wrapper {
+      position: sticky; top: 0;
+      background: var(--color-background-app);
+      padding: 10px 1rem; z-index: 100;
+      border-bottom: 1px solid var(--color-border-tertiary);
+      margin: 0 -1rem 1.5rem -1rem;
+    }
+    .tabs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex-shrink: 0; padding: 10px 16px;
+      border-radius: 20px; border: 1px solid var(--color-border-tertiary);
+      background: var(--color-background-primary);
+      font-size: 14px; cursor: pointer; color: var(--color-text-secondary);
+      font-weight: 500; transition: all 0.2s ease;
+    }
+    .tab:active { transform: scale(0.96); }
+    .tab.active {
+      background: var(--accent-light); border-color: var(--accent-border);
+      color: var(--accent-dark); font-weight: 600;
+      box-shadow: 0 2px 4px rgba(29,124,94,0.15);
+    }
+
+    .section { display: none; animation: fadeIn 0.3s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--color-background-primary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 1.25rem; margin-bottom: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .card-title {
+      font-size: 15px; font-weight: 600; color: var(--color-text-primary);
+      margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; display: inline-block;
+    }
+    .badge-green  { background: var(--accent-light); color: var(--accent-dark); }
+    .badge-blue   { background: #EEF3FB; color: #2653A3; }
+    .badge-purple { background: #F3EEFB; color: #5A2DA3; }
+
+    .content p  { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.5rem; }
+    .content ul { padding-left: 1.4rem; margin-top: 0.5rem; }
+    .content li { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 8px; }
+    .content strong { color: var(--color-text-primary); font-weight: 600; }
+
+    .author-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 1.5rem;
+    }
+    .author-card {
+      background: var(--color-background-primary); border-radius: var(--border-radius-md);
+      padding: 1rem; cursor: pointer; border: 1px solid var(--color-border-tertiary);
+      transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.02); text-align: center;
+    }
+    .author-card:active { transform: scale(0.98); }
+    .author-card.selected {
+      background: var(--accent-light); border-color: var(--accent-border);
+      box-shadow: 0 2px 6px rgba(29,124,94,0.15);
+    }
+    .author-card .name { font-size: 14px; font-weight: 600; color: var(--color-text-primary); }
+    .author-card .role { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+
+    .author-content { display: none; animation: fadeIn 0.3s ease; }
+    .author-content.active { display: block; }
+
+    .topic-block {
+      border-left: 4px solid var(--accent);
+      padding: 1rem; background: var(--color-background-primary);
+      border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+      margin-bottom: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .topic-block h3 { font-size: 16px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 8px; }
+    .topic-block p  { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+    .qa-item {
+      border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md);
+      margin-bottom: 12px; overflow: hidden;
+      background: var(--color-background-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .qa-question {
+      padding: 1rem; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--color-text-primary); display: flex; justify-content: space-between;
+      align-items: center; user-select: none;
+    }
+    .qa-question:active { background: var(--color-background-secondary); }
+    .qa-arrow { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 8px; }
+    .qa-answer { display: none; padding: 0 1rem 1rem 1rem; font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+    .qa-answer.open { display: block; animation: fadeIn 0.3s ease; }
+    .qa-arrow.open  { transform: rotate(180deg); color: var(--accent); }
+
+    .data-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px; margin: 1rem 0;
+    }
+    .data-stat {
+      background: var(--color-background-primary); border-radius: var(--border-radius-md);
+      padding: 1rem 0.5rem; text-align: center;
+      border: 1px solid var(--color-border-tertiary); box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .data-stat .val { font-size: 24px; font-weight: 700; color: var(--accent-dark); }
+    .data-stat .lbl { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.3; }
+
+    .tip-box, .warn-box {
+      border-radius: var(--border-radius-md); padding: 1rem; margin: 1rem 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .tip-box  { background: var(--accent-light); border-left: 4px solid var(--accent); }
+    .tip-box p  { font-size: 14px; color: var(--accent-dark); line-height: 1.6; font-weight: 500; }
+    .warn-box { background: #FAEEDA; border-left: 4px solid #854F0B; }
+    .warn-box p { font-size: 14px; color: #854F0B; line-height: 1.6; font-weight: 500; }
+
+    .divider { height: 1px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+    .section-label { font-size: 14px; font-weight: 600; color: var(--color-text-secondary); margin: 16px 0 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Guía de defensa — Impacto del TDAH en el Rendimiento Académico</h1>
+    <p>U.E.G.P. Gral. José Laurencio Silva · 5to Año</p>
+  </div>
+
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <div class="tab active" onclick="showSection('resumen')">Resumen general</div>
+      <div class="tab" onclick="showSection('autores')">Por autor</div>
+      <div class="tab" onclick="showSection('preguntas')">Preguntas del jurado</div>
+      <div class="tab" onclick="showSection('datos')">Datos clave</div>
+      <div class="tab" onclick="showSection('consejos')">Consejos de defensa</div>
+    </div>
+  </div>
+
+  <div id="resumen" class="section active">
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-green">Tema central</span></div>
+      <div class="content">
+        <p>La investigación analiza el <strong>Trastorno por Déficit de Atención e Hiperactividad (TDAH) y su impacto significativo en el rendimiento académico</strong> de los estudiantes del 5to año de bachillerato de la U.E.G. Gral. José Laurencio Silva[cite: 32].</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Estructura de la tesis</div>
+      <div class="content">
+        <ul>
+          <li><strong>Capítulo I:</strong> El Problema — planteamiento, justificación, objetivos y delimitación[cite: 16].</li>
+          <li><strong>Capítulo II:</strong> Marco Teórico — antecedentes, historia, definición, tipos, causas, diagnóstico, consecuencias, bases legales y variables[cite: 19].</li>
+          <li><strong>Capítulo III:</strong> Marco Metodológico — tipo de investigación, población, muestra, encuestas y técnicas de recolección[cite: 23].</li>
+          <li><strong>Capítulo IV:</strong> Análisis e interpretación de los resultados, conclusiones y recomendaciones[cite: 26].</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Objetivos específicos <span class="badge badge-green">memorizar</span></div>
+      <div class="content">
+        <ul>
+          <li>Analizar la prevalencia del TDAH en entornos educativos y cómo las adaptaciones curriculares pueden mejorar la experiencia escolar[cite: 102, 103].</li>
+          <li>Investigar la percepción de docentes y padres sobre el TDAH, identificando creencias erróneas[cite: 104].</li>
+          <li>Evaluar intervenciones específicas (entrenamiento social y conductual) para medir su impacto[cite: 105, 106].</li>
+          <li>Revisar literatura sobre el manejo familiar para ofrecer recomendaciones prácticas[cite: 107, 108].</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Definición de la variable central</div>
+      <div class="content">
+        <p><strong>TDAH:</strong> Es un trastorno neuroconductual muy común en la infancia que perdura en la edad adulta[cite: 171, 172]. Se caracteriza por un patrón persistente de inatención, hiperactividad e impulsividad que interfiere en el desarrollo y funcionamiento[cite: 78].</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="autores" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Selecciona tu nombre para ver tu guion detallado y tu tema asignado.</p>
+
+    <div class="author-grid">
+      <div class="author-card" onclick="showAuthor('victoria')">
+        <div class="name">Victoria</div>
+        <div class="role">Capítulo I: El Problema</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('sharol')">
+        <div class="name">Sharol</div>
+        <div class="role">Capítulo IV: Resultados y Conclusiones</div>
+      </div>
+    </div>
+
+    <div id="author-victoria" class="author-content">
+      <div class="topic-block" style="border-color:#1D7C5E;">
+        <h3>Victoria — Capítulo I: El Problema</h3>
+        <p>Eres la encargada de <strong>abrir la defensa</strong>. Debes explicar qué es el problema, a quiénes afecta, por qué es importante estudiarlo y los objetivos del proyecto.</p>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Guion literal de defensa <span class="badge badge-green">Paso a paso</span></div>
+        <div class="content">
+          <p><strong>[Acción: Da un paso al frente, mira al jurado con seguridad, mantén una postura recta y esboza una leve sonrisa de cortesía]</strong></p>
+          <p>"Buenos días, respetado jurado y público presente. Mi compañera Sharol y mi persona, Victoria, venimos a defender nuestra investigación titulada: 'Impacto significativo del TDAH en el rendimiento académico del 5to año de bachillerato de la U.E.G. Gral. José Laurencio Silva'[cite: 32].</p>
+          <p><strong>[Cambia a un tono más serio y analítico]</strong></p>
+          <p>"Para dar inicio a nuestro Capítulo I, el Planteamiento del Problema, debemos entender que el Trastorno por Déficit de Atención e Hiperactividad no es una simple indisciplina, sino una alteración de las funciones ejecutivas del cerebro[cite: 66]. A nivel mundial, afecta aproximadamente al 5% de la población infantojuvenil [cite: 67], y en diversas culturas la cifra oscila entre el 5 y el 10% de la población infantil, arrastrando sus síntomas hasta la vida adulta en muchos casos[cite: 79].</p>
+          <p>En nuestro entorno escolar, notamos que los estudiantes con TDAH enfrentan severos retos[cite: 81]. La inatención les impide concentrarse y seguir instrucciones, derivando en un bajo rendimiento académico[cite: 82]. Al mismo tiempo, su hiperactividad e impulsividad afectan sus interacciones sociales, llevándolos en muchos casos al aislamiento o a ser víctimas de bullying[cite: 83]. Además, esta tensión se traslada al hogar, creando un círculo vicioso de frustración familiar[cite: 84, 85].</p>
+          <p>Es aquí donde radica la justificación de nuestro estudio[cite: 87]. Existe una gran falta de conocimiento en la sociedad y en las aulas; a menudo el TDAH es malinterpretado como simple mala educación o falta de disciplina[cite: 91, 94]. Esto genera diagnósticos erróneos o tardíos[cite: 92]. Con nuestra investigación buscamos desterrar esos mitos y estigmas[cite: 93].</p>
+          <p><strong>[Haz un pequeño gesto con la mano para enumerar]</strong></p>
+          <p>Para abordar esto, nos planteamos un objetivo general: contribuir a una mayor comprensión del TDAH, tanto clínica como socialmente[cite: 99]. De este, se desprenden nuestros objetivos específicos: analizar la prevalencia del trastorno, investigar las percepciones erróneas de padres y docentes, evaluar intervenciones como el entrenamiento conductual, y revisar la literatura para ofrecer recomendaciones prácticas a las familias[cite: 102, 104, 105, 108]. Nuestro estudio fue delimitado principalmente hacia la etapa de niñez y adolescencia en entornos escolares [cite: 130, 134], aplicando enfoques cualitativos y cuantitativos[cite: 139].</p>
+          <p>Para profundizar en cómo se interpretan y abordan estos retos, los dejo con mi compañera Sharol."</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Conceptos clave que debes dominar</div>
+        <div class="content">
+          <ul>
+            <li><strong>Prevalencia:</strong> Afecta entre el 5% y el 10% de la población infantil[cite: 79].</li>
+            <li><strong>Mito principal:</strong> Creer que es "mala educación", cuando en realidad es un trastorno neuropsiquiátrico[cite: 94, 78].</li>
+            <li><strong>Impacto:</strong> Afecta lo académico, el entorno social (bullying) y las dinámicas familiares[cite: 82, 83, 84].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="author-sharol" class="author-content">
+      <div class="topic-block" style="border-color:#2653A3;">
+        <h3>Sharol — Capítulo IV: Resultados, Conclusiones y Recomendaciones</h3>
+        <p>Eres la encargada de <strong>cerrar la defensa</strong>. Debes explicar qué significan los datos recopilados, qué concluyeron y qué recomiendan para ayudar a las personas con TDAH.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Guion literal de defensa <span class="badge badge-green">Paso a paso</span></div>
+        <div class="content">
+          <p><strong>[Acción: Da un paso al frente, asiente hacia Victoria agradeciendo el pase. Mira al jurado con seguridad y tono propositivo]</strong></p>
+          <p>"Buenos días al jurado evaluador. Dando continuidad a nuestra investigación, abordamos el Capítulo IV, donde analizamos e interpretamos los datos[cite: 394, 398]. En nuestra evaluación fue vital seguir criterios estrictos, comparando los perfiles de atención, hiperactividad e impulsividad con manuales internacionales como el DSM-5[cite: 400, 401]. Evaluamos el impacto real que tienen estos síntomas en la vida diaria, tanto académica como socialmente[cite: 402].</p>
+          <p>En el perfil neuropsicológico estudiado, confirmamos que las personas con TDAH presentan puntuaciones cognitivas dentro de la normalidad, pero estas son significativamente menores al compararse con personas sin el trastorno[cite: 415, 417]. Además, identificamos que el TDAH rara vez viene solo; genera graves dificultades de relación, baja autoestima y un inminente fracaso escolar[cite: 454, 458, 460].</p>
+          <p><strong>[Cambia a un tono reflexivo para las conclusiones]</strong></p>
+          <p>Al llegar a nuestras conclusiones [cite: 463], evidenciamos que el TDAH es multifactorial: no hay una única causa, sino una compleja interacción genética y ambiental[cite: 466, 467]. No se trata únicamente de un niño que no presta atención o se mueve mucho; se trata de una condición que detona síntomas emocionales severos como la ansiedad y la depresión[cite: 465]. En el aula, el déficit de autocontrol se traduce en bajo rendimiento[cite: 469]. Por eso, concluimos que la intervención temprana puede prevenir los peores efectos de este trastorno, y la colaboración entre padres, educadores y médicos es irremplazable[cite: 472, 474].</p>
+          <p><strong>[Tono proactivo para las recomendaciones]</strong></p>
+          <p>Basados en esto, hemos generado recomendaciones concretas[cite: 475]. A nivel escolar y laboral, es fundamental establecer un entorno libre de distracciones y con buena iluminación[cite: 477, 479]. Recomendamos estructurar rutinas diarias con pausas regulares, y hacer uso de la tecnología mediante calendarios digitales y alarmas para organizar el tiempo[cite: 480, 482, 483]. También, insistimos en la importancia de la actividad física para reducir el estrés, el uso de técnicas de meditación para el autocontrol, y por supuesto, nunca descartar la búsqueda de ayuda profesional con psicólogos especializados[cite: 489, 493, 494].</p>
+          <p>Cada individuo con TDAH es diferente[cite: 496]. Nuestro trabajo buscó visibilizar sus realidades para construir aulas más empáticas y efectivas. Muchas gracias por su atención, estamos abiertas al ciclo de preguntas."</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Conceptos clave que debes dominar</div>
+        <div class="content">
+          <ul>
+            <li><strong>Manuales Diagnósticos:</strong> El DSM-5 y CIE-10 son la base científica para diagnosticarlo[cite: 401].</li>
+            <li><strong>Conclusión principal:</strong> El TDAH es multifactorial (genética + ambiente) y afecta el área emocional, no solo la atención[cite: 465, 467].</li>
+            <li><strong>Recomendaciones prácticas:</strong> Minimizar distracciones en el entorno, usar tecnología (calendarios), crear rutinas, hacer ejercicio y recibir terapia profesional[cite: 477, 480, 483, 489, 494].</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="preguntas" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Toca cada pregunta para ver la respuesta sugerida basada en su trabajo.</p>
+
+    <div class="section-label">Preguntas Generales sobre TDAH</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Qué es el TDAH en términos sencillos? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">El Trastorno por Déficit de Atención e Hiperactividad (TDAH) es un trastorno neuroconductual y neuropsiquiátrico, muy común en la infancia y que puede perdurar hasta la edad adulta[cite: 171, 172]. Se caracteriza por tres síntomas principales: inatención, hiperactividad e impulsividad, los cuales dificultan el desarrollo académico, laboral y social del individuo[cite: 51, 52].</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuáles son las causas del TDAH según su investigación? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">El TDAH tiene una causa multifactorial[cite: 53]. Tiene una fuerte carga genética hereditaria (1 de cada 4 niños tiene un padre con TDAH)[cite: 217, 218]. También influye la anatomía cerebral, con menor nivel de actividad en las áreas que controlan la atención[cite: 215]. Adicionalmente, influyen factores ambientales como el nacimiento prematuro, lesiones cerebrales o exposición prenatal a alcohol o tabaco[cite: 221, 222, 223].</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Preguntas sobre el estudio y diagnóstico</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cómo se detecta o diagnóstica el TDAH? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">No existe una única prueba médica[cite: 228]. El diagnóstico requiere una evaluación completa que incluye entrevistas clínicas, revisión de antecedentes médicos, y escalas de calificación de comportamiento (como la escala de Conners) aplicadas por padres y profesores[cite: 232, 233, 235, 312]. También se usa como base los criterios del manual DSM-5[cite: 308].</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuáles son los tres tipos de TDAH? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Se clasifica en tres tipos: 1) Predominantemente inatento (distracción fácil sin mucha actividad física), 2) Predominantemente hiperactivo-impulsivo (movimiento constante e impulsividad sin fallas graves de atención), y 3) Tipo Combinado, que es el más común y presenta tanto inatención como hiperactividad[cite: 205, 207, 209, 210].</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Preguntas sobre Tratamiento y Recomendaciones</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿El TDAH tiene cura? ¿Cuál es el tratamiento? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">El TDAH no se cura, pero se puede manejar exitosamente de forma de reducir sus síntomas[cite: 239]. El tratamiento ideal es una combinación de intervenciones: medicamentos estimulantes (que regulan la dopamina), terapia conductual, apoyo psicológico familiar y adaptaciones en el entorno escolar[cite: 198, 199, 200, 243].</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Qué recomendaciones le dan a un docente para tratar a un alumno con TDAH? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Sugerimos crear un entorno libre de ruidos y distracciones con buena iluminación[cite: 477, 479]. Implementar rutinas estructuradas con pausas frecuentes, ya que ellos pierden el enfoque rápido[cite: 480, 482]. Además, usar apoyos visuales, desglosar las tareas en pasos cortos, y mantener una comunicación directa sin estigmatizar al estudiante[cite: 484, 487].</div>
+    </div>
+  </div>
+
+  <div id="datos" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Estadísticas e información que ambas deben dominar a la perfección.</p>
+
+    <div class="data-grid">
+      <div class="data-stat"><div class="val">5-10%</div><div class="lbl">Prevalencia de TDAH en población infantil [cite: 79]</div></div>
+      <div class="data-stat"><div class="val">60%</div><div class="lbl">De niños diagnosticados continúan con síntomas en adultez [cite: 341]</div></div>
+      <div class="data-stat"><div class="val">3</div><div class="lbl">Tipos de TDAH (Inatento, Hiperactivo, Combinado) [cite: 205]</div></div>
+      <div class="data-stat"><div class="val">1980</div><div class="lbl">Año en que el DSM-III lo incluyó oficialmente [cite: 165]</div></div>
+      <div class="data-stat"><div class="val">25%</div><div class="lbl">Riesgo hereditario si el padre tiene TDAH (1 en 4) [cite: 218]</div></div>
+      <div class="data-stat"><div class="val">DSM-5</div><div class="lbl">Manual de psiquiatría usado para diagnóstico [cite: 308]</div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Mitos vs Realidades <span class="badge badge-blue">Para defensa oral</span></div>
+      <div class="content">
+        <ul>
+          <li><strong>Mito:</strong> "Es falta de disciplina y mala educación"[cite: 94]. <strong>Realidad:</strong> Es un trastorno del neurodesarrollo que altera las funciones ejecutivas del cerebro[cite: 66, 171].</li>
+          <li><strong>Mito:</strong> "Solo es no prestar atención". <strong>Realidad:</strong> Viene acompañado de alta impulsividad, baja autoestima, problemas de relación y comorbilidades como ansiedad o depresión[cite: 460, 465].</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Bases legales <span class="badge badge-purple">citar si el jurado pregunta</span></div>
+      <div class="content">
+        <ul>
+          <li><strong>Art. 81 CRBV:</strong> Garantiza a las personas con necesidades especiales el ejercicio pleno de capacidades e integración escolar[cite: 283, 285].</li>
+          <li><strong>LOPNNA:</strong> El Estado y la escuela deben garantizar el disfrute pleno de los derechos de protección y desarrollo del menor[cite: 288].</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="consejos" class="section">
+
+    <div class="card">
+      <div class="card-title">Reglas de Oro para Victoria y Sharol</div>
+      <div class="content">
+        <ul>
+          <li><strong>Sincronización:</strong> Como son solo dos expositoras, la transición debe ser impecable. Cuando una hable, la otra debe prestar atención asintiendo levemente, proyectando trabajo en equipo.</li>
+          <li><strong>Tono empático:</strong> El TDAH es una condición psicológica sensible. No hablen del paciente como un "problema", sino como alguien que "enfrenta retos por su neurodesarrollo". Usen términos como "neuroconductual" y "funciones ejecutivas".</li>
+          <li><strong>Seguridad en los datos:</strong> Victoria debe memorizar la estadística poblacional (5 al 10%) [cite: 79], y Sharol debe memorizar la conclusión de la causa multifactorial[cite: 467].</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <p>Tip para Victoria: Cuando justifiques el problema, haz énfasis en el bullying y la frustración familiar[cite: 83, 84]. Eso conecta emocionalmente con los profesores del jurado, ya que ellos viven esa realidad en las aulas.</p>
+    </div>
+
+    <div class="warn-box">
+      <p>Cuidado para Sharol: Si te preguntan sobre fármacos, aclara que ustedes recomiendan "ayuda profesional" para determinar medicamentos, y enfoquen sus recomendaciones prácticas de la tesis en la adaptación del entorno (rutinas, evitar distracciones)[cite: 477, 480], no en recetar píldoras.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showAuthor(id) {
+    document.querySelectorAll('.author-content').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.author-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('author-' + id).classList.add('active');
+    event.currentTarget.classList.add('selected');
+  }
+
+  function toggleQA(el) {
+    const answer = el.nextElementSibling;
+    const arrow  = el.querySelector('.qa-arrow');
+    document.querySelectorAll('.qa-answer').forEach(a => {
+      if (a !== answer) {
+        a.classList.remove('open');
+        a.previousElementSibling.querySelector('.qa-arrow').classList.remove('open');
+      }
+    });
+    answer.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
